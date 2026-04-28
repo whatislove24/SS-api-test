@@ -59,14 +59,5 @@ Create — создание сущности
 GetById — получение по ID
 GetAll — получение списка
 Delete — удаление сущности
-Patch — обновление (временно отключён)
+Patch — обновление 
 
-проблемы-
-
-PATCH endpoint вызывает падение сервиса:
-
-panic: invalid memory address or nil pointer dereference
-
-В связи с этим тест PatchTest помечен как:
-
-@Disabled
