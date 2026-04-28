@@ -56,8 +56,12 @@ http://localhost:8080/api/_/docs/swagger/
 Реализованы тесты:
 
 Create — создание сущности
+
 GetById — получение по ID
+
 GetAll — получение списка
+
 Delete — удаление сущности
+
 Patch — обновление 
 
