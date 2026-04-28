@@ -7,5 +7,4 @@ public record EntityResponse(
         Integer id,
         String title,
         Boolean verified
-) {
-}
+) {}

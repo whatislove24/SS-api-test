@@ -17,9 +17,12 @@ public class EntityClient {
         this.requestSpec = requestSpec;
     }
 
+    private io.restassured.specification.RequestSpecification request() {
+        return given().spec(requestSpec);
+    }
+
     public Integer create(CreateRequest request) {
-        String id = given()
-                .spec(requestSpec)
+        String id = request()
                 .body(request)
                 .when()
                 .post("/create")
@@ -32,8 +35,7 @@ public class EntityClient {
     }
 
     public EntityResponse getById(Integer id) {
-        return given()
-                .spec(requestSpec)
+        return request()
                 .when()
                 .get("/get/" + id)
                 .then()
@@ -42,18 +44,8 @@ public class EntityClient {
                 .as(EntityResponse.class);
     }
 
-    public void getByIdShouldReturnNotFound(Integer id) {
-        given()
-                .spec(requestSpec)
-                .when()
-                .get("/get/" + id)
-                .then()
-                .statusCode(404);
-    }
-
     public List<EntityResponse> getAll() {
-        return given()
-                .spec(requestSpec)
+        return request()
                 .when()
                 .get("/getAll")
                 .then()
@@ -63,22 +55,21 @@ public class EntityClient {
                 .getList("entity", EntityResponse.class);
     }
 
-    public void patch(Integer id, PatchRequest request) {
-        given()
-                .spec(requestSpec)
-                .body(request)
+    public void delete(Integer id) {
+        request()
                 .when()
-                .patch("/patch/" + id)
+                .delete("/delete/" + id)
                 .then()
                 .statusCode(204);
     }
 
-    public void delete(Integer id) {
-        given()
-                .spec(requestSpec)
+    public void patch(Integer id, PatchRequest request) {
+        request()
+                .body(request)
                 .when()
-                .delete("/delete/" + id)
+                .patch("/patch/" + id)
                 .then()
+                .log().all()
                 .statusCode(204);
     }
 }

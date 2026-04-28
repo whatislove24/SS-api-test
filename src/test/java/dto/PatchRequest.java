@@ -1,12 +1,16 @@
 package dto;
 
-import lombok.Builder;
-import lombok.Value;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Value
-@Builder
-public class PatchRequest {
-    String title;
-    String description;
-    Boolean verified;
+import java.util.List;
+
+public record PatchRequest(
+        Addition addition,
+
+        @JsonProperty("important_numbers")
+        List<Integer> importantNumbers,
+
+        String title,
+        Boolean verified
+) {
 }

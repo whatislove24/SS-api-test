@@ -1,116 +1,114 @@
 package tests;
 
-import api.BaseApiTest;
+import dto.Addition;
 import dto.CreateRequest;
 import dto.EntityResponse;
 import dto.PatchRequest;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
+import tests.base.BaseApiTest;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EntityApiTest extends BaseApiTest {
 
     @Test
-    void shouldCreateEntity() {
-        CreateRequest request = CreateRequest.builder()
-                .title("create title")
-                .description("create description")
-                .verified(true)
-                .build();
+     void shouldCreateEntity() {
+        CreateRequest request = new CreateRequest(
+                "create title",
+                "create description",
+                true
+        );
 
         Integer id = entityClient.create(request);
         EntityResponse response = entityClient.getById(id);
 
-        assertNotNull(response.id());
-        assertEquals(id, response.id());
-        assertEquals(request.getTitle(), response.title());
-        assertEquals(request.getVerified(), response.verified());
+        assertNotNull(response, "Response should not be null");
+        assertEquals(id, response.id(), "ID should match");
+        assertEquals(request.title(), response.title(), "Title should match");
+        assertEquals(request.verified(), response.verified(), "Verified should match");
     }
 
     @Test
-    void shouldGetEntityById() {
-        CreateRequest request = CreateRequest.builder()
-                .title("get by id title")
-                .description("get by id description")
-                .verified(true)
-                .build();
+   void shouldGetEntityById() {
+        CreateRequest request = new CreateRequest(
+                "get by id title",
+                "get by id description",
+                true
+        );
 
         Integer id = entityClient.create(request);
         EntityResponse response = entityClient.getById(id);
 
-        assertEquals(id, response.id());
-        assertEquals(request.getTitle(), response.title());
-        assertEquals(request.getVerified(), response.verified());
+        assertEquals(id, response.id(), "ID should match");
+        assertEquals(request.title(), response.title(), "Title should match");
+        assertEquals(request.verified(), response.verified(), "Verified should match");
     }
 
     @Test
-    void shouldGetAllEntities() {
-        CreateRequest request = CreateRequest.builder()
-                .title("get all title")
-                .description("get all description")
-                .verified(true)
-                .build();
+   void shouldGetAllEntities() {
+        CreateRequest request = new CreateRequest(
+                "get all title",
+                "get all description",
+                true
+        );
 
         Integer id = entityClient.create(request);
         List<EntityResponse> entities = entityClient.getAll();
 
-        assertNotNull(entities);
-        assertFalse(entities.isEmpty());
+        assertNotNull(entities, "Entities list should not be null");
+        assertFalse(entities.isEmpty(), "Entities list should not be empty");
 
-        boolean entityExists = entities.stream()
-                .anyMatch(entity -> entity.id().equals(id));
+        boolean exists = entities.stream()
+                .anyMatch(e -> e.id().equals(id));
 
-        assertTrue(entityExists);
+        assertTrue(exists, "Created entity should exist in list");
     }
 
-    @Disabled("Backend падает на PATCH: nil pointer dereference")
     @Test
     void shouldPatchEntity() {
-        CreateRequest request = CreateRequest.builder()
-                .title("old title")
-                .description("old description")
-                .verified(false)
-                .build();
+        CreateRequest create = new CreateRequest(
+                "old title",
+                "old description",
+                false
+        );
 
-        Integer id = entityClient.create(request);
+        Integer id = entityClient.create(create);
 
-        PatchRequest patchRequest = PatchRequest.builder()
-                .title("new title")
-                .description("new description")
-                .verified(true)
-                .build();
+        PatchRequest patch = new PatchRequest(
+                new Addition("Дополнительные сведения", 123),
+                List.of(42, 87, 15),
+                "new title",
+                true
+        );
 
-        entityClient.patch(id, patchRequest);
+        entityClient.patch(id, patch);
 
         EntityResponse updated = entityClient.getById(id);
 
-        assertEquals(id, updated.id());
-        assertEquals(patchRequest.getTitle(), updated.title());
-        assertEquals(patchRequest.getVerified(), updated.verified());
+        assertEquals("new title", updated.title(), "Title should be updated");
+        assertTrue(updated.verified(), "Verified should be true");
     }
 
     @Test
     void shouldDeleteEntity() {
-        CreateRequest request = CreateRequest.builder()
-                .title("delete title")
-                .description("delete description")
-                .verified(true)
-                .build();
+        CreateRequest request = new CreateRequest(
+                "delete title",
+                "delete description",
+                true
+        );
 
         Integer id = entityClient.create(request);
-
-        assertNotNull(id);
 
         entityClient.delete(id);
 
         List<EntityResponse> entities = entityClient.getAll();
 
-        boolean entityExists = entities.stream()
-                .anyMatch(entity -> entity.id().equals(id));
+        boolean exists = entities.stream()
+                .anyMatch(e -> e.id().equals(id));
 
-        assertFalse(entityExists);
+        assertFalse(exists, "Entity should be deleted");
     }
 }

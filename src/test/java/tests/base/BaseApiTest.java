@@ -1,5 +1,6 @@
-package api;
+package tests.base;
 
+import api.EntityClient;
 import config.ConfigReader;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
