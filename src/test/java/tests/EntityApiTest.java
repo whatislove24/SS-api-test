@@ -6,16 +6,15 @@ import dto.EntityResponse;
 import dto.PatchRequest;
 import org.junit.jupiter.api.Test;
 import tests.base.BaseApiTest;
+
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EntityApiTest extends BaseApiTest {
 
     @Test
-     void shouldCreateEntity() {
+    void shouldCreateEntity() {
         CreateRequest request = new CreateRequest(
                 "create title",
                 "create description",
@@ -32,7 +31,7 @@ public class EntityApiTest extends BaseApiTest {
     }
 
     @Test
-   void shouldGetEntityById() {
+    void shouldGetEntityById() {
         CreateRequest request = new CreateRequest(
                 "get by id title",
                 "get by id description",
@@ -48,7 +47,7 @@ public class EntityApiTest extends BaseApiTest {
     }
 
     @Test
-   void shouldGetAllEntities() {
+    void shouldGetAllEntities() {
         CreateRequest request = new CreateRequest(
                 "get all title",
                 "get all description",
